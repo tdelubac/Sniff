@@ -18,6 +18,7 @@ class Reader(threading.Thread):
 					for line in lines:
 						if self.bssid in line:
 							print(line.split(',')[4])
+							break
 			except Exception as e:
 				print(e)
 			time.sleep(1)
