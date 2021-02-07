@@ -1,4 +1,6 @@
 import threading
+import pandas as pd
+import time
 
 class Reader(threading.Thread):
 
@@ -10,7 +12,15 @@ class Reader(threading.Thread):
 
 	def run(self):
 		while not self.stop_signal:
-			print('Reading ' + self.file)
+			try:
+				with open(self.file) as f:
+					lines = list(reversed(list(f)))
+					for line in lines:
+						if self.bssid in line:
+							print(line.split(',')[4])
+			except Exception as e:
+				print(e)
+			time.sleep(1)
 
 	def stop(self):
 		self.stop_signal = True
