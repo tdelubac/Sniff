@@ -5,26 +5,33 @@ import os
 
 class Reader(threading.Thread):
 
-	def __init__(self, file, bssid):
+	def __init__(self, process, bssid):
 		threading.Thread.__init__(self)
-		self.file = file
+		self.process = process
 		self.bssid = bssid
 		self.stop_signal = False
 
 	def run(self):
 		while not self.stop_signal:
 			try:
-				if os.path.isfile(self.file):
-					with open(self.file) as f:
-						lines = f.readlines()
-						for line in lines:
-							if self.bssid in line:
-								print(line.split(',')[3])
-								break
-
+				for i in range(1000):
+					line = self.process.stdout.readline()
+					if not line:
+						print('breaking')
+						break
+					if self.bssid in line:
+						line = line.replace('(not associated)', '(not_associated)')
+						params = line.split(' ')
+						params = [el for el in params if el]
+						params = [el for el in params if el.startswith('\x1b') == False]
+						print(params[2])
+						break
 			except Exception as e:
 				print(e)
 			time.sleep(1)
+
+
+
 
 	def stop(self):
 		self.stop_signal = True

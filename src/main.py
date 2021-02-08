@@ -3,21 +3,22 @@ import os
 import time
 from sniffer import Sniffer
 from reader import Reader
+import subprocess
 
 def main():
-	output = '/home/kali/dev/sniffer/data/airodump-output'
-	file = output + '-01.csv'
 	bssid = os.getenv('BSSID2')
-	snif = Sniffer()
-	reader = Reader(file, bssid)
 
-	#snif.start_monitor_mode()
-	#snif.launch_monitoring(output)
+	snif = Sniffer()
+	snif.start_monitor_mode()
+	snif.launch_monitoring()
+
+	reader = Reader(snif.get_process(), bssid)
 	reader.start()
-	time.sleep(200)
+	time.sleep(60)
 	reader.stop()
-	#snif.stop_monitoring()
-	#snif.stop_monitor_mode()
+	reader.join()
+	snif.stop_monitoring()
+	snif.stop_monitor_mode()
 	return
 
 

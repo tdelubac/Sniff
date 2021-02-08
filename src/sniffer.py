@@ -19,25 +19,26 @@ class Sniffer():
 	def stop_monitor_mode(self):
 		try:
 			os.system('airmon-ng stop ' + self.interface + 'mon')
+			os.system('systemctl restart NetworkManager')
 		except Exception as e:
 			print(e)
 		return
 
-	def launch_monitoring(self, output):
+	def launch_monitoring(self):
 		try:
-			cmd = 'airodump-ng ' + self.interface + 'mon -w ' + output
-			print(cmd)
-			self.process = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
+			cmd = ['airodump-ng', self.interface + 'mon', '-n', '1']
+			self.process = subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True)
 		except Exception as e:
 			print(e)
 		return
 
 	def stop_monitoring(self):
 		if self.process is not None:
-			os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
+			self.process.kill()
 			print('Killed process')
 		else:
 			print('No process to kill')
 		return
 
-
+	def get_process(self):
+		return self.process
