@@ -6,8 +6,8 @@ from reader import Reader
 
 def main():
 	output = '/home/kali/dev/sniffer/data/airodump-output'
-	file = output + '-01.log.csv'
-	bssid = os.getenv('BSSID1')
+	file = output + '-01.csv'
+	bssid = os.getenv('BSSID2')
 	snif = Sniffer()
 	reader = Reader(file, bssid)
 
