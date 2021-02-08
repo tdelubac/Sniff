@@ -14,7 +14,7 @@ class Reader(threading.Thread):
 	def run(self):
 		while not self.stop_signal:
 			try:
-				for i in range(1000):
+				while True:
 					line = self.process.stdout.readline()
 					if not line:
 						print('breaking')
