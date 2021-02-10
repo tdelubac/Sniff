@@ -31,7 +31,7 @@ class Sniffer():
 			else:
 				cmd = ['airodump-ng', self.interface + 'mon', '-n', '1']
 			print(cmd)
-			self.process = subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True)
+			self.process = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
 		except Exception as e:
 			print(e)
 		return

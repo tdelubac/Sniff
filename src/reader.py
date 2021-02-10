@@ -13,33 +13,35 @@ class Reader(threading.Thread):
 		self.stop_signal = False
 		self.wifi_mac = None
 		self.wifi_channel = None
+		self.power = None
+
 
 	def run(self):
 		while not self.stop_signal:
 			try:
-				toc = 0
 				tic = time.time()
-				while toc - tic < 10:
+				for line in iter(self.process.stdout.readline, ""):
 					toc = time.time()
-					print(self.process.stdout.read())
-					line = self.process.stdout.readline()
-					if not line:
+					if toc - tic > 5:
 						break
 					if self.wifi_mac:
 						if (self.wifi_mac in line) and (self.bssid not in line):
 							params = line.split(' ')
 							params = [el for el in params if el]
 							params = [el for el in params if el.startswith('\x1b') == False]
-							self.wifi_channel = params[5]
-							print('channel', self.wifi_channel)
+							if params[5]!=self.wifi_channel:
+								self.wifi_channel = params[5]
+								print('channel', self.wifi_channel)
 					if self.bssid in line:
 						line = line.replace('(not associated)', '(not_associated)')
 						params = line.split(' ')
 						params = [el for el in params if el]
 						params = [el for el in params if el.startswith('\x1b') == False]
 						self.wifi_mac = params[0]
-						set_color(int(params[2]))
-						print('power',params[2])
+						if params[2] != self.power:
+							self.power = params[2]
+							set_color(int(self.power))
+							print('power ',params[2])
 						break
 			except Exception as e:
 				print(e)
@@ -48,7 +50,7 @@ class Reader(threading.Thread):
 
 
 	def stop(self):
-		set_color((0,0,0))
+		stop_leds()
 		self.stop_signal = True
 
 	def get_channel(self):

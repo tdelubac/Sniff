@@ -22,7 +22,7 @@ def flash(color):
 
     
 def color_scale(pos):
-    pos_min = 10
+    pos_min = 20
     pos_max = 80
     pos_med = (pos_max - pos_min)/2. + pos_min
     if pos < pos_min:
@@ -43,7 +43,7 @@ def color_scale(pos):
                 
 
 def stop_leds():
-    pixels.brightness = 0
+    pixels.fill((0,0,0))
     pixels.show()
 
 

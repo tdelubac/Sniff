@@ -9,8 +9,10 @@ from talk_to_leds import flash
 
 def main():
 	flash((255,255,255))
+	flash((255,255,255))
+	flash((255,255,255))
 
-	bssid = os.getenv('BSSID2')
+	bssid = os.getenv('BSSID1')
 
 	snif = Sniffer()
 	snif.start_monitor_mode()
@@ -22,12 +24,15 @@ def main():
 	channel = None
 	reader.start()
 	for i in range(6):
-		time.sleep(10)
+		time.sleep(5)
 		channel = reader.get_channel()
 		if channel:
 			break
 
 	if channel:
+		flash((0,255,0))
+		flash((0,255,0))
+		flash((0,255,0))
 		flash((0,255,0))
 		flash((0,255,0))
 		reader.stop()
@@ -40,8 +45,12 @@ def main():
 	else:
 		flash((255,0,0))
 		flash((255,0,0))
+		flash((255,0,0))
+		flash((255,0,0))
+		flash((255,0,0))
+		flash((255,0,0))
 
-	time.sleep(60)
+	time.sleep(300)
 	reader.stop()
 	reader.join()
 	snif.stop_monitoring()
