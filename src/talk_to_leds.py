@@ -10,9 +10,20 @@ PIX_NUM = 8
 pixels = neopixel.NeoPixel(PIX_PIN, PIX_NUM, brightness=0.05, auto_write=False)
 
 
+def flash(color):
+    pixels.fill((0,0,0))
+    pixels.show()
+    pixels.fill(color)
+    pixels.show()
+    time.sleep(0.1)
+    pixels.fill((0,0,0))
+    pixels.show()
+    time.sleep(0.1)
+
+    
 def color_scale(pos):
-    pos_min = 0
-    pos_max = 100
+    pos_min = 10
+    pos_max = 80
     pos_med = (pos_max - pos_min)/2. + pos_min
     if pos < pos_min:
         g = b = 0
