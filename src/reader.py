@@ -2,6 +2,7 @@ import threading
 import pandas as pd
 import time
 import os
+from talk_to_leds import set_color, stop_leds
 
 class Reader(threading.Thread):
 
@@ -14,7 +15,7 @@ class Reader(threading.Thread):
 	def run(self):
 		while not self.stop_signal:
 			try:
-				while True:
+				for i in range(100):
 					line = self.process.stdout.readline()
 					if not line:
 						print('breaking')
@@ -25,6 +26,7 @@ class Reader(threading.Thread):
 						params = [el for el in params if el]
 						params = [el for el in params if el.startswith('\x1b') == False]
 						print(params[2])
+						set_color(int(params[2]))
 						break
 			except Exception as e:
 				print(e)
@@ -34,4 +36,5 @@ class Reader(threading.Thread):
 
 
 	def stop(self):
+		stop_leds()
 		self.stop_signal = True
