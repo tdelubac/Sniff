@@ -27,9 +27,9 @@ class Sniffer():
 	def launch_monitoring(self, channel=None):
 		try:
 			if channel:
-				cmd = ['airodump-ng', self.interface + 'mon', '-n', '1', '--channel', channel]
+				cmd = ['airodump-ng', self.interface + 'mon', '-n', '1', '--band', 'abg', '--berlin', '5', '--channel', channel]
 			else:
-				cmd = ['airodump-ng', self.interface + 'mon', '-n', '1']
+				cmd = ['airodump-ng', self.interface + 'mon', '-n', '1', '--band', 'abg', '--berlin', '5']
 			print(cmd)
 			self.process = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
 		except Exception as e:

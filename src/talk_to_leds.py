@@ -6,8 +6,31 @@ import numpy as np
 
 
 PIX_PIN = board.D18
+PIX_PIN2 = board.D12
 PIX_NUM = 8
-pixels = neopixel.NeoPixel(PIX_PIN, PIX_NUM, brightness=0.05, auto_write=False)
+
+pixels1 = neopixel.NeoPixel(PIX_PIN, PIX_NUM, brightness=0.05, auto_write=False)
+pixels2 = neopixel.NeoPixel(PIX_PIN2, PIX_NUM, brightness=0.05, auto_write=False)
+
+
+class Pixels():
+
+    def __init__(self, pixels1, pixels2):
+        self.pixels1 = pixels1
+        self.pixels2 = pixels2
+
+    def fill(self, t):
+        self.pixels1.fill(t)
+        self.pixels2.fill(t)
+
+    def show(self):
+        self.pixels1.show()
+        self.pixels2.show()
+
+pixels = Pixels(pixels1, pixels2)
+#pixels.brightness = 0
+#pixels.fill((0, 0, 255))
+#pixels.show()
 
 
 def flash(color):
@@ -22,8 +45,8 @@ def flash(color):
 
     
 def color_scale(pos):
-    pos_min = 20
-    pos_max = 80
+    pos_min = 900
+    pos_max = 6400
     pos_med = (pos_max - pos_min)/2. + pos_min
     if pos < pos_min:
         g = b = 0
@@ -50,7 +73,7 @@ def stop_leds():
 def set_color(power):
     '''Set LEDs color
     '''
-    color = color_scale(-power)
+    color = color_scale((-power)**2)
     pixels.fill(color)
     pixels.show()
 
@@ -78,6 +101,13 @@ def wheel(pos):
 def rainbow_cycle(wait, j):
     for i in range(PIX_NUM):
         pixel_index = (i * 256 // PIX_NUM) + j
-        pixels[i] = wheel(pixel_index & 255)
+        pixels.pixels1[i] = wheel(pixel_index & 255)
+        pixels.pixels2[i] = wheel(pixel_index & 255)
     pixels.show()
     time.sleep(wait)
+
+
+#for i in range(0, 2550):
+#    rainbow_cycle(0.001, i)
+
+

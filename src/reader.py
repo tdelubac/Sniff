@@ -2,7 +2,7 @@ import threading
 import pandas as pd
 import time
 import os
-from talk_to_leds import set_color, stop_leds
+from talk_to_leds import set_color, stop_leds, rainbow_cycle, flash
 
 class Reader(threading.Thread):
 
@@ -23,22 +23,24 @@ class Reader(threading.Thread):
 				for line in iter(self.process.stdout.readline, ""):
 					toc = time.time()
 					if toc - tic > 5:
+						flash((255,255,255))
+						for i in range(255):
+							rainbow_cycle(0.001, i)
 						break
+					line.replace('(not associated)', '(not_associated)')
+					params = line.split(' ')
+					params = [el for el in params if el]
+					params = [el for el in params if el.startswith('\x1b') == False]
 					if self.wifi_mac and not self.wifi_channel:
-						if (self.wifi_mac in line) and (self.bssid not in line):
-							params = line.split(' ')
-							params = [el for el in params if el]
-							params = [el for el in params if el.startswith('\x1b') == False]
-							if params[5]!=self.wifi_channel:
+						if (self.wifi_mac == params[0]) and (len(params[1]) < 5):
+							if (params[5]!=self.wifi_channel) and int(params[5])>0:
+								print(params)
 								self.wifi_channel = params[5]
 								print('channel', self.wifi_channel)
 					if self.bssid in line:
-						line = line.replace('(not associated)', '(not_associated)')
-						params = line.split(' ')
-						params = [el for el in params if el]
-						params = [el for el in params if el.startswith('\x1b') == False]
 						self.wifi_mac = params[0]
 						if params[2] != self.power:
+							print(params)
 							self.power = params[2]
 							set_color(int(self.power))
 							print('power ',params[2])

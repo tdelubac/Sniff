@@ -12,7 +12,7 @@ def main():
 	flash((255,255,255))
 	flash((255,255,255))
 
-	bssid = os.getenv('BSSID2')
+	bssid = os.getenv('BSSID1')
 
 	snif = Sniffer()
 	snif.start_monitor_mode()
@@ -38,7 +38,7 @@ def main():
 	# Reinstantiating reader
 	reader = Reader(snif.get_process(), bssid, channel)
 	reader.start()
-	time.sleep(60)
+	time.sleep(120)
 	reader.stop()
 	reader.join()
 	snif.stop_monitoring()
