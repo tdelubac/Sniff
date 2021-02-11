@@ -6,13 +6,13 @@ from talk_to_leds import set_color, stop_leds
 
 class Reader(threading.Thread):
 
-	def __init__(self, process, bssid):
+	def __init__(self, process, bssid, channel=None):
 		threading.Thread.__init__(self)
 		self.process = process
 		self.bssid = bssid
 		self.stop_signal = False
 		self.wifi_mac = None
-		self.wifi_channel = None
+		self.wifi_channel = channel
 		self.power = None
 
 
@@ -24,7 +24,7 @@ class Reader(threading.Thread):
 					toc = time.time()
 					if toc - tic > 5:
 						break
-					if self.wifi_mac:
+					if self.wifi_mac and not self.wifi_channel:
 						if (self.wifi_mac in line) and (self.bssid not in line):
 							params = line.split(' ')
 							params = [el for el in params if el]
